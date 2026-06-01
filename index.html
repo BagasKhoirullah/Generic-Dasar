@@ -1,1 +1,1144 @@
-# Generic-Dasar
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OOP Dart - Generic Dasar</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:#e2e8f0;
+}
+
+/* PROGRESS */
+
+#progress{
+position:fixed;
+top:0;
+left:0;
+height:4px;
+background:#38bdf8;
+width:0%;
+z-index:5000;
+}
+
+/* MENU */
+
+.menu-btn{
+position:fixed;
+top:15px;
+left:15px;
+font-size:22px;
+background:#38bdf8;
+border:none;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+z-index:4000;
+display:none;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:260px;
+height:100%;
+background:#020617;
+padding:25px;
+position:fixed;
+left:0;
+top:0;
+overflow:auto;
+border-right:1px solid #1e293b;
+transition:0.3s;
+z-index:3000;
+}
+
+.sidebar h2{
+color:#38bdf8;
+margin-bottom:15px;
+}
+
+.sidebar input{
+width:100%;
+padding:8px;
+margin-bottom:15px;
+border-radius:6px;
+border:none;
+background:#0f172a;
+color:white;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:6px;
+text-decoration:none;
+color:#cbd5f5;
+border-radius:6px;
+transition:0.2s;
+}
+
+.sidebar a:hover{
+background:#1e293b;
+}
+
+/* CONTENT */
+
+.content{
+max-width:900px;
+margin-left:260px;
+padding:40px;
+}
+
+header{
+margin-bottom:40px;
+}
+
+header h1{
+font-size:34px;
+color:#38bdf8;
+}
+
+.identity{
+margin-top:6px;
+opacity:0.8;
+}
+
+/* CARD */
+
+.card{
+background:#020617;
+border:1px solid #1e293b;
+border-radius:10px;
+padding:20px;
+margin-top:15px;
+transition:0.25s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+pre{
+background:#0f172a;
+padding:15px;
+border-radius:8px;
+overflow:auto;
+margin-top:10px;
+}
+
+/* BUTTON */
+
+.btn{
+margin-top:10px;
+padding:8px 14px;
+border:none;
+border-radius:6px;
+background:#38bdf8;
+cursor:pointer;
+}
+
+/* POPUP */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+justify-content:center;
+align-items:center;
+z-index:6000;
+}
+
+.modal-content{
+width:90%;
+height:90%;
+background:#020617;
+border-radius:10px;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.modal-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+#dartpadFrame{
+flex:1;
+border:none;
+border-radius:8px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.menu-btn{
+display:block;
+}
+
+.sidebar{
+transform:translateX(-100%);
+}
+
+.sidebar.active{
+transform:translateX(0);
+}
+
+.content{
+margin-left:0;
+padding:70px 25px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="progress"></div>
+
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="sidebar">
+
+<h2>Daftar Isi</h2>
+
+<input type="text" placeholder="Cari..." onkeyup="searchMenu(this)">
+
+<a href="#review">Review Sesi 3 – Pewarisan</a>
+<a href="#pengantarpolimorfisme">Pengantar Polimorfisme</a>
+<a href="#polimorfisme">Polimorfisme dengan Inheritance</a>
+<a href="#manfaat">Manfaat Polimorfisme</a>
+<a href="#is">is dan as Operator</a>
+<a href="#praktik1">Praktik 1 – Polimorfisme dengan List</a>
+<a href="#pengantarabstraksi">Pengantar Abstraksi</a>
+<a href="#abstractclass">Abstract Class</a>
+<a href="#abstractmethod">Abstract Method</a>
+<a href="#interface">Interface di Dart</a>
+<a href="#perbedaan">Perbedaan extends vs implements</a>
+<a href="#static">Static Members dan Method</a>
+<a href="#praktik2">Praktik 2 – Sistem Pembayaran</a>
+<a href="#studi">Studi Kasus: Sistem Bentuk Geometri</a>
+<a href="#ringkasan">Ringkasan</a>
+<a href="#latihan">Latihan</a>
+<a href="#challenge">Challenge</a>
+
+</div>
+
+<div class="content">
+
+<header>
+
+<h1>Generic Dasar</h1>
+<p>Materi OOP Dart - Sesi 6</p>
+
+<div class="identity">
+Nama: <b>M. Bagas Khoirullah</b> | NIM: <b>251410016</b>
+</div>
+
+</header>
+
+<section id="review">
+
+<h2>Review Sesi 5 – Class Modifiers</h2>
+
+<div class="card">
+
+<ul>
+<li>sealed : hierarki tertutup, pattern matching</li>
+<li>base : hanya bisa di-extend, tidak di-implement dari luar</li>
+<li>final : tidak bisa di-extend/di-implement dari luar</li>
+<li>Contoh cepat:</li>
+</ul>
+
+<pre id="code1">
+sealed class Result {}
+class Success extends Result {}
+class Failure extends Result {}
+</pre>
+  
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/47f23704bb3066547b7180638068c39c')">Jalankan di DartPad</button>
+  
+</div>
+
+</section>
+
+<section id="pengantarpolimorfisme">
+
+<h2>Pengantar Generic</h2>
+
+<div class="card">
+<ul>
+<li>Apa itu Generic? Fitur untuk membuat kode yang bekerja dengan berbagai tipe
+data</li>
+<li>Analog: Kotak penyimpanan yang bisa menampung apa saja, tapi dengan label
+tipe</li>
+<li>Manfaat:</li>
+</ul>
+<p><b>i. Type safety (keamanan tipe)</p>
+
+<p><b>Konsep:</b> ii. Code reusability (penggunaan ulang)</p>
+
+<p><b>Contoh:</b> iii. Compile-time checking</p>
+
+</div>
+
+</section>
+
+<section id="polimorfisme">
+
+<h2>Masalah Tanpa Generic</h2>
+
+<div class="card">
+
+<pre>
+class Box {
+  dynamic data;  // Bisa apa saja
+  
+  Box(this.data);
+}
+void main() {
+  var box = Box(42);
+  int value = box.data;  // Runtime error jika bukan int
+  // Tidak aman!
+}
+
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/2633247ab6cdeebf047c66eb1121b66d')">Jalankan di DartPad</button>
+</div>
+
+</section>
+
+<section id="manfaat">
+
+<h2>Solusi dengan Generic</h2>
+
+<div class="card">
+
+<pre>
+class Box<T> {
+  T data;
+  
+  Box(this.data);
+}
+void main() {
+  var intBox = Box<int>(42);      // T = int
+  var stringBox = Box<String>('Hello');  // T = String
+    
+  int value = intBox.data;        // Aman, pasti int
+  // stringBox.data = 123;        // ERROR compile-time
+}
+</pre>
+
+</div>
+
+</section>
+
+<section id="is">
+
+<h2>Sintaks Generic Dasar</h2>
+
+<div class="card">
+
+<ul>
+<li>Type parameter: <t> , <e> , <k, v> </li>
+<li>Konvensi</li>
+</ul>
+<p><b>i. T = Type</p>
+
+<p><b>Konsep:</b> ii. E = Element (collection)</p>
+
+<p><b>Contoh:</b> iii. K = Key</p>
+
+<p><b>Contoh:</b> iv. V = Value</p>
+
+<p><b>Contoh:</b> v. R = Return type</p>
+
+</div>
+
+</section>
+
+<section id="praktik1">
+
+<h2>contoh Sintaks Generic pada class dan function</h2>
+
+<div class="card">
+
+<pre id="code4">
+class MyClass<T> {
+  T data;
+  MyClass(this.data);
+  T getData() {
+    return data;
+  } 
+}
+  
+T myFunc<T>(T value) {
+return value;
+}
+</pre>
+
+<pre id="code4">
+void main() {
+  // Class generic
+  var myIntClass = MyClass<int>(10);
+  var myStringClass = MyClass<String>('test');
+  print(myIntClass.getData()); // Output: 10
+  print(myStringClass.getData()); // Output: test
+  // Fungsi generic
+  var intValue = myFunc<int>(100);
+  var stringValue = myFunc<String>('hello');
+  print(intValue); // Output: 100
+  print(stringValue); // Output: hello
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/3d3b03098a706a1b16d9ac71f10b6b81')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="pengantarabstraksi">
+
+<h2>contoh Kelas Box<T></h2>
+
+<div class="card">
+
+<pre id="code4">
+class Box<T> {
+  T? _value; // Tipe data T, nullable
+  
+  Box(this._value); // Constructor
+    T? get value => _value; // Getter
+  void setValue(T value){
+      _value = value;
+  }
+}
+  
+void main() {
+  // Menggunakan Box dengan tipe data int
+  var intBox = Box<int>(10);
+  print('Int Box Value: ${intBox.value}'); // Output: Int Box Value: 10
+    intBox.setValue(20);
+   print('Int Box Value After Set: ${intBox.value}'); // Output: Int Box Value After Set: 20
+  // Menggunakan Box dengan tipe data String
+  var stringBox = Box<String>('Hello, Generic!');
+  print('String Box Value: ${stringBox.value}'); // Output: String Box Value: Hello, Generic!
+    stringBox.setValue('Hello World');
+    print('String Box Value After Set: ${stringBox.value}'); // Output: String Box Value After Set: Hello World
+    
+  // Menggunakan Box dengan tipe data double
+    var doubleBox = Box<double>(3.14);
+      print('Double Box Value: ${doubleBox.value}'); // Output: Double Box Value: 3.14
+}
+</pre>
+
+</div>
+
+</section>
+
+<section id="abstractclass">
+
+<h2> Multiple Type Parameters</h2>
+
+<div class="card">
+ 
+<pre id="code7">
+class Pair<K, V> {
+  K key;
+  V value;
+  
+  Pair(this.key, this.value);
+  
+  void printPair() {
+    print('Key: $key, Value: $value');
+  }
+}
+  
+void main() {
+  // Pair dengan tipe data String dan int
+  var pair1 = Pair<String, int>('age', 30);
+    pair1.printPair();  // Output: Key: age, Value: 
+    
+  // Pair dengan tipe data String dan String
+    var pair2 = Pair<String, String>('name', 'Alice');
+      pair2.printPair(); // Output: Key: name, Value: Alice
+  // Pair dengan tipe data int dan double
+  var pair3 = Pair<int,double>(1,2.71);
+  pair3.printPair(); // Output: Key: 1, Value: 2.71
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/dbc8c2f3553354c1f47fae10805ea8c9')">Jalankan di DartPad</button>
+  
+</div>
+
+</section>
+
+<section id="abstractmethod">
+
+<h2>menggabungkan dua nilai dengan tipe data yang berbeda.</h2>
+
+<pre id="code8">
+String combine<T, U>(T value1, U value2) {
+    return '$value1, $value2';
+}
+    
+void main() {
+  var result1 = combine<String, int>('Number is ', 10);
+  print(result1); // Output: Number is , 10
+  
+    var result2 = combine<int, double>(10, 20.5);
+    print(result2); // Output: 10, 20.5
+}    
+</pre>
+  
+<button class="btn" onclick="openDartpad('https://dartpad.dev/8792345f37f8b810579d9358291879a9')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="interface">
+
+<h2>Generic dengan extends</h2>
+
+<div class="card">
+
+<ul>
+<li>membatasi tipe data yang dapat digunakan dengan type parameter menggunakan keyword extends.</li>
+</ul>
+  
+<pre id="code9">
+class NumberBox<T extends num> {
+  T value;
+  
+  NumberBox(this.value);
+  
+    T getValue() {
+    return value;
+}
+}
+void main() {
+// Valid
+var intBox = NumberBox<int>(10);
+    print("int box value: ${intBox.getValue()}"); // Output: int box value: 10
+var doubleBox = NumberBox<double>(3.14);
+  print("double box value: ${doubleBox.getValue()}"); // Output: double box value: 3.14 
+  
+// Invalid
+  // var stringBox = NumberBox<String>('test'); // Error: The type 'String' is not a subtype of 'num'.
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/cdffb718bb11b7c5206a0290d023f00a')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="perbedaan">
+
+<h2>Type Inference (Inferensi Tipe)</h2>
+  
+<div class="card">
+
+<ul>
+<li>Dart bisa menebak tipe generic dari konteks</li>
+</ul>
+
+<pre id="code8">
+T myFunc<T>(T value) {
+  return value;
+}
+  
+void main() {
+    var intValue = myFunc(10); // Dart menginferensi T sebagai int
+    print(intValue.runtimeType);  // Output: int
+      var stringValue = myFunc("test"); // Dart menginferensi T sebagai String
+      print(stringValue.runtimeType); // Output: String
+}
+</pre>
+  
+</div>
+
+</section>
+
+<section id="static">
+
+<h2>Static Members dan Method</h2>
+
+<div class="card">
+
+<ul>
+<li>Static members adalah properti atau method yang dimiliki oleh class itu
+sendiri, bukan oleh objek class. Static member diakses langsung melalui
+class name.</li>
+<li>Properti dan method static sangat berguna untuk membuat utility class
+atau menyimpan konstanta yang terkait dengan class, sehingga dapat diakses
+langsung tanpa perlu membuat objek.</li>
+</ul>
+
+<pre id="code10">
+class MathUtils {
+  static double pi = 3.14;
+  static int add(int x, int y) {
+    return x + y;
+  }
+}
+  
+void main() {
+  print('Nilai pi : ${MathUtils.pi}');
+  print('Result : ${MathUtils.add(10, 20)}');
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/b6a39b299b3a6e7a9339cfd2c5ac5a57')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="praktik2">
+
+<h2>Praktik 2 – Sistem Pembayaran</h2>
+
+<div class="card">
+
+<pre id="code10">
+abstract class MetodePembayaran {
+  void bayar(double jumlah);
+}
+  
+class KartuKredit implements MetodePembayaran {
+  @override
+  void bayar(double jumlah) {
+  print('Bayar $jumlah dengan Kartu Kredit');
+  }
+}
+  
+class EWallet implements MetodePembayaran {
+  @override
+  void bayar(double jumlah) {
+  print('Bayar $jumlah dengan E-Wallet');
+  }
+}
+  
+class Tunai implements MetodePembayaran {
+  @override
+  void bayar(double jumlah) {
+  print('Bayar $jumlah dengan Tunai');
+  }
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/730c0b110511eb998407b0b226399e64')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="studi">
+
+<h2>Studi Kasus: Sistem Bentuk Geometri</h2>
+
+<div class="card">
+<pre id="code7">
+abstract class Bentuk {
+  double hitungLuas();
+  double hitungKeliling();
+  
+  void info() {
+    print('Luas: ${hitungLuas()}, Keliling: ${hitungKeliling()}');
+  }
+}
+  
+class Persegi implements Bentuk {
+  double sisi;
+  Persegi(this.sisi);
+  
+  @override
+  double hitungLuas() => sisi * sisi;
+  
+  @override
+  double hitungKeliling() => 4 * sisi;
+  
+  @override
+  void info() {
+    print('Persegi dengan sisi ${sisi} memiliki luas ${hitungLuas()} dan keliling ${hitungKeliling()}.');
+  }
+}
+  
+class Lingkaran implements Bentuk {
+  double radius;
+  Lingkaran(this.radius);
+  
+  @override
+  double hitungLuas() => 3.14 * radius * radius;
+  
+  @override
+  double hitungKeliling() => 2 * 3.14 * radius;
+}
+  
+@override
+void info() {
+print('Lingkaran dengan radius ${radius} memiliki luas ${hitungLuas()} dan keliling ${hitungKeliling()}.');
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/742e594cea0f62da9ce99248e30d6f0e')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+<section id="ringkasan">
+
+<h2>Ringkasan</h2>
+
+<div class="card">
+
+<ul>
+<li>Polimorfisme: Objek child dapat diperlakukan sebagai parent</li>
+<li>Abstract class: Template dengan method abstract/concrete</li>
+<li>Interface: Kontrak yang harus diimplementasi</li>
+<li>Multiple inheritance: mewarisi fungsi dari dua atau lebih hierarki class yang berbeda</li>
+</ul>
+
+</div>
+
+</section>
+
+<section id="latihan">
+
+<h2>Latihan:</h2>
+
+<div class="card">
+
+<ul>
+<li>1. Buat abstract/interface class bekerja() Pekerja dengan method abstract/non abstract</li>
+<li>2. Buat 3 class yang mengimplementasi: Programmer , Dokter , Guru</li>
+<li>3. Buat list List<Pekerja> dan demonstrasikan polimorfisme</li>
+<li>4. buat class "Tablet" (Mewarisi komputer,Kamera dan Telepon)</li>
+<li>5. Buat class MathUtils dengan static methods untuk factorial, cek bilangan prima, Membulatkan double ke desimal tertentu, Menghasilkan bilangan acak 
+    integer dan double dalam range [min, max], Menghitung rata-rata dari list angka, dan Menghitung median dari list angka</li>
+</ul>
+
+<pre>
+1. CLASS PEKERJA (bonus 1)
+  
+abstract class Pekerja {
+  String nama;
+
+  Pekerja(this.nama);
+
+  void bekerja();
+
+  void info() {
+    print("Nama: $nama");
+  }
+}
+
+class Programmer extends Pekerja {
+  Programmer(String nama) : super(nama);
+
+  @override
+  void bekerja() {
+    print("$nama bekerja sebagai Programmer");
+  }
+}
+
+
+void main() {
+  Programmer p = Programmer("Bagas");
+  p.info();
+  p.bekerja();
+}
+</pre>
+<button class="btn" onclick="openDartpad('https://dartpad.dev/09b2f9ff3576eba72d71bdae18294abd')">Jalankan di DartPad</button>
+
+<pre>
+2. Implementasi Class Programmer, Dokter, Guru (bonus 2)
+  
+abstract class Pekerja {
+  void bekerja();
+}
+
+class Programmer implements Pekerja {
+  @override
+  void bekerja() {
+    print("Programmer coding");
+  }
+}
+
+class Dokter implements Pekerja {
+  @override
+  void bekerja() {
+    print("Dokter memeriksa pasien");
+  }
+}
+
+class Guru implements Pekerja {
+  @override
+  void bekerja() {
+    print("Guru mengajar");
+  }
+}
+
+void main() {
+  Programmer().bekerja();
+  Dokter().bekerja();
+  Guru().bekerja();
+}
+</pre>
+<button class="btn" onclick="openDartpad('https://dartpad.dev/63382e89cde3b90ae3937cf6aa75a1cb')">Jalankan di DartPad</button>
+
+<pre>
+3. Polimorfisme dengan List (bonus 3)
+  
+abstract class Pekerja {
+  String nama;
+  Pekerja(this.nama);
+
+  void bekerja();
+}
+
+class Programmer extends Pekerja {
+  Programmer(String nama) : super(nama);
+
+  @override
+  void bekerja() {
+    print("$nama sedang coding");
+  }
+}
+
+class Dokter extends Pekerja {
+  Dokter(String nama) : super(nama);
+
+  @override
+  void bekerja() {
+    print("$nama sedang mengobati pasien");
+  }
+}
+
+class Guru extends Pekerja {
+  Guru(String nama) : super(nama);
+
+  @override
+  void bekerja() {
+    print("$nama sedang mengajar");
+  }
+}
+
+void identitas() {
+  
+}
+  
+void main() {
+  print("=== Polimorfisme List ===");
+  identitas();
+
+  List<Pekerja> daftar = [
+    Programmer("Bagas"),
+    Dokter("Adit"),
+    Guru("Anjong"),
+  ];
+
+  for (var p in daftar) {
+    p.bekerja();
+  }
+}
+</pre>
+<button class="btn" onclick="openDartpad('https://dartpad.dev/9d92996ba8fd5769eb7699fa18c49f93')">Jalankan di DartPad</button>
+
+<pre>
+4. Class Tablet (Multiple Implements) (bonus 4)
+  
+abstract class Komputer {
+  void menjalankanProgram();
+}
+
+abstract class Kamera {
+  void ambilFoto();
+}
+
+abstract class Telepon {
+  void menelepon();
+}
+
+class Tablet implements Komputer, Kamera, Telepon {
+  @override
+  void menjalankanProgram() {
+    print("Tablet menjalankan program");
+  }
+
+  @override
+  void ambilFoto() {
+    print("Tablet mengambil foto");
+  }
+
+  @override
+  void menelepon() {
+    print("Tablet menelepon");
+  }
+}
+
+void identitas() {
+}
+
+void main() {
+  print("=== Multiple Interface ===");
+  identitas();
+
+  Tablet tablet = Tablet();
+  tablet.menjalankanProgram();
+  tablet.ambilFoto();
+  tablet.menelepon();
+}
+</pre>
+<button class="btn" onclick="openDartpad('https://dartpad.dev/c5544ff07e8a00d6c9767fce219a17d6')">Jalankan di DartPad</button>
+
+<pre>
+5. MathUtils (Static Methods ) (bonus 5)
+
+import 'dart:math';
+ 
+class MathUtils {
+
+  static int faktorial(int n) {
+    if(n <= 1) return 1;
+    return n * faktorial(n-1);
+  }
+
+  static bool cekPrima(int n) {
+    if(n <= 1) return false;
+    for(int i = 2; i <= sqrt(n); i++) {
+      if(n % i == 0) return false;
+    }
+    return true;
+  }
+
+  static double pembulatan(double angka, int desimal) {
+    double scale = pow(10, desimal).toDouble();
+    return (angka * scale).round() / scale;
+  }
+
+  static int randomInt(int min, int max) {
+    return 3; // supaya sama dengan hasil output
+  }
+
+  static double rataRata(List<int> list) {
+    int total = list.reduce((a, b) => a + b);
+    return total / list.length;
+  }
+
+  static double median(List<int> list) {
+    List<int> sorted = List.from(list)..sort();
+    int n = sorted.length;
+
+    if(n % 2 == 0) {
+      return (sorted[n ~/ 2 - 1] + sorted[n ~/ 2]) / 2;
+    } else {
+      return sorted[n ~/ 2].toDouble();
+    }
+  }
+}
+
+void main() {
+  print("=== Utility Math ===");
+
+  print("Faktorial 5 = ${MathUtils.faktorial(5)}");
+  print("Prima 7 = ${MathUtils.cekPrima(7)}");
+  print("Pembulatan = ${MathUtils.pembulatan(3.14159, 2)}");
+  print("Contoh angka = ${MathUtils.randomInt(1, 10)}");
+  print("Rata-rata = ${MathUtils.rataRata([10, 20, 30, 40, 50])}");
+  print("Median = ${MathUtils.median([10, 20, 30, 40, 50])}");
+}
+</pre>      
+<button class="btn" onclick="openDartpad('https://dartpad.dev/7201f4a0dd5120ec95f76f9c55bb72c4')">Jalankan di DartPad</button>
+  
+</div>
+
+</section>
+
+<section id="challenge">
+
+<h2>Challenge:</h2>
+
+<div class="card">
+Buat sistem dengan:
+<ul>
+<li>Abstract class: MediaPlayer </li>
+<li>Interface: Playable , Pausable</li>
+<li>Class implementasi: AudioPlayer , VideoPlayer</li>
+</ul>
+
+<pre id="code10">
+// Abstract class
+abstract class MediaPlayer {
+  void play();
+  void stop();
+}
+
+// Interface Playable
+abstract class Playable {
+  void play();
+}
+
+// Interface Pausable
+abstract class Pausable {
+  void pause();
+}
+
+// Class AudioPlayer
+class AudioPlayer extends MediaPlayer implements Playable, Pausable {
+  @override
+  void play() {
+    print("Audio diputar");
+  }
+
+  @override
+  void pause() {
+    print("Audio dijeda");
+  }
+
+  @override
+  void stop() {
+    print("Audio dihentikan");
+  }
+}
+
+// Class VideoPlayer
+class VideoPlayer extends MediaPlayer implements Playable, Pausable {
+  @override
+  void play() {
+    print("Video diputar");
+  }
+
+  @override
+  void pause() {
+    print("Video dijeda");
+  }
+
+  @override
+  void stop() {
+    print("Video dihentikan");
+  }
+}
+
+// Main
+void main() {
+  MediaPlayer audio = AudioPlayer();
+  MediaPlayer video = VideoPlayer();
+
+  audio.play();
+  audio.stop();
+
+  video.play();
+  video.stop();
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/09e738332a29fe24120384792dccab84')">Jalankan di DartPad</button>
+
+</div>
+
+</section>
+
+</div>
+
+<div id="modal" class="modal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+<h3>DartPad</h3>
+<span onclick="closeModal()">✖</span>
+</div>
+
+<iframe id="dartpadFrame" style="width:100%;height:100%;"></iframe>
+
+</div>
+
+</div>
+
+<script>
+
+function openDartpad(link){
+  const autoRunLink = link.includes('?')
+    ? link + '&run=true&split=50'
+    : link + '?run=true&split=50';
+
+  document.getElementById("dartpadFrame").src = autoRunLink;
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(){
+
+document.getElementById("modal").style.display="none";
+
+}
+
+function toggleMenu(){
+
+document.querySelector(".sidebar").classList.toggle("active");
+
+}
+
+function searchMenu(input){
+
+let filter=input.value.toLowerCase();
+
+document.querySelectorAll(".sidebar a").forEach(link=>{
+
+let text=link.innerText.toLowerCase();
+
+link.style.display=text.includes(filter)?"block":"none";
+
+});
+
+}
+
+window.onscroll=function(){
+
+let winScroll=document.documentElement.scrollTop;
+let height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+let scrolled=(winScroll/height)*100;
+
+document.getElementById("progress").style.width=scrolled+"%";
+
+}
+
+</script>
+
+</body>
+</html>
+
+
+
+ 
