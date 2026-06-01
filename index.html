@@ -590,69 +590,45 @@ void main() {
 
 <section id="static">
 
-<h2>Static Members dan Method</h2>
+<h2>Pembatasan Tipe dan manfaatnya</h2>
 
 <div class="card">
 
 <ul>
-<li>Static members adalah properti atau method yang dimiliki oleh class itu
-sendiri, bukan oleh objek class. Static member diakses langsung melalui
-class name.</li>
-<li>Properti dan method static sangat berguna untuk membuat utility class
-atau menyimpan konstanta yang terkait dengan class, sehingga dapat diakses
-langsung tanpa perlu membuat objek.</li>
+<li>Keamanan Tipe yang Lebih Baik: Memastikan bahwa kode hanya bekerja
+dengan tipe data yang kompatibel, sehingga mengurangi risiko runtime error</li>
+<li>Peningkatan Keterbacaan Kode: Membuat kode lebih jelas dan mudah dibaca
+karena kita dapat melihat tipe data yang diharapkan secara eksplisit.</li>
+<li>Memungkinkan Penggunaan Method dari Tipe Data Tertentu: Memungkinkan
+kita untuk memanggil method yang spesifik untuk tipe data yang dibatasi</li>
+<li>Mencegah Penggunaan Tipe Data yang Tidak Sesuai: Mencegah penggunaan
+tipe data yang tidak sesuai dengan logika kode.</li>
+<li>Membantu dalam Desain dan Implementasi: Membantu kita dalam merancang
+dan mengimplementasikan kelas dan fungsi generic dengan lebih terstruktur dan
+terdefinisi.</li>
 </ul>
-
-<pre id="code10">
-class MathUtils {
-  static double pi = 3.14;
-  static int add(int x, int y) {
-    return x + y;
-  }
-}
   
-void main() {
-  print('Nilai pi : ${MathUtils.pi}');
-  print('Result : ${MathUtils.add(10, 20)}');
-}
-</pre>
-
-<button class="btn" onclick="openDartpad('https://dartpad.dev/b6a39b299b3a6e7a9339cfd2c5ac5a57')">Jalankan di DartPad</button>
-
 </div>
 
 </section>
 
 <section id="praktik2">
 
-<h2>Praktik 2 – Sistem Pembayaran</h2>
+<h2>Pembatasan Tipe pada Interface dan Class</h2>
 
 <div class="card">
 
 <pre id="code10">
-abstract class MetodePembayaran {
-  void bayar(double jumlah);
-}
-  
-class KartuKredit implements MetodePembayaran {
-  @override
-  void bayar(double jumlah) {
-  print('Bayar $jumlah dengan Kartu Kredit');
+void printIterable<T extends Iterable<dynamic>>(T iterable) {
+  for (var item in iterable) {
+    print(item);
   }
 }
   
-class EWallet implements MetodePembayaran {
-  @override
-  void bayar(double jumlah) {
-  print('Bayar $jumlah dengan E-Wallet');
-  }
-}
-  
-class Tunai implements MetodePembayaran {
-  @override
-  void bayar(double jumlah) {
-  print('Bayar $jumlah dengan Tunai');
-  }
+void main() {
+  printIterable<List<int>>([1, 2, 3]); // Output: 1, 2, 3
+  printIterable<Set<String>>({'apple', 'banana'}); // Output: apple, banana
+  //  printIterable<int>(10); // Error: The type 'int' is not a subtype of 'Iterable<dynamic>'
 }
 </pre>
 
@@ -664,49 +640,45 @@ class Tunai implements MetodePembayaran {
 
 <section id="studi">
 
-<h2>Studi Kasus: Sistem Bentuk Geometri</h2>
+<h2>Pembatasan Tipe dengan Class Abstract</h2>
 
 <div class="card">
 <pre id="code7">
-abstract class Bentuk {
-  double hitungLuas();
-  double hitungKeliling();
+abstract class Animal {
+  void makeSound();
+}
   
-  void info() {
-    print('Luas: ${hitungLuas()}, Keliling: ${hitungKeliling()}');
+class Dog implements Animal {
+  @override
+  void makeSound() {
+    print('Woof!');
   }
 }
   
-class Persegi implements Bentuk {
-  double sisi;
-  Persegi(this.sisi);
-  
+class Cat implements Animal {
   @override
-  double hitungLuas() => sisi * sisi;
-  
-  @override
-  double hitungKeliling() => 4 * sisi;
-  
-  @override
-  void info() {
-    print('Persegi dengan sisi ${sisi} memiliki luas ${hitungLuas()} dan keliling ${hitungKeliling()}.');
+  void makeSound() {
+    print('Meow!');
   }
 }
   
-class Lingkaran implements Bentuk {
-  double radius;
-  Lingkaran(this.radius);
-  
-  @override
-  double hitungLuas() => 3.14 * radius * radius;
-  
-  @override
-  double hitungKeliling() => 2 * 3.14 * radius;
+class AnimalCage<T extends Animal> {
+  T animal;
+  AnimalCage(this.animal);
+    void sound(){
+      animal.makeSound();
+  }
 }
-  
-@override
-void info() {
-print('Lingkaran dengan radius ${radius} memiliki luas ${hitungLuas()} dan keliling ${hitungKeliling()}.');
+</pre>
+
+<pre id="code7">
+void main() {
+    var dogCage = AnimalCage<Dog>(Dog());
+      dogCage.sound(); // Output: Woof!
+
+  var catCage = AnimalCage<Cat>(Cat());
+    catCage.sound();  // Output: Meow!
+// var stringCage = AnimalCage<String>("test"); // The type 'String' is not a subtype of 'Animal'
 }
 </pre>
 
@@ -718,268 +690,143 @@ print('Lingkaran dengan radius ${radius} memiliki luas ${hitungLuas()} dan kelil
 
 <section id="ringkasan">
 
-<h2>Ringkasan</h2>
+<h2>Praktik 1 – Generic Class & Fungsi</h2>
 
 <div class="card">
 
 <ul>
-<li>Polimorfisme: Objek child dapat diperlakukan sebagai parent</li>
-<li>Abstract class: Template dengan method abstract/concrete</li>
+<li>1. Buat class Repository<T> dengan Method: save(T item) , T getById(int id) , List<T> getAll()</li>
+<li>2. Buat fungsi generic swap<T>(List<T> list, int i, int j)</li>
 <li>Interface: Kontrak yang harus diimplementasi</li>
-<li>Multiple inheritance: mewarisi fungsi dari dua atau lebih hierarki class yang berbeda</li>
+<li>3. Buat class Triple<A, B, C> dengan 3 field</li>
 </ul>
 
+<pre id="code7">
+// Repository<T>
+class Repository<T> {
+  final List<T> _data = [];
+
+  void save(T item) {
+    _data.add(item);
+  }
+
+  T? getById(int id) {
+    if (id >= 0 && id < _data.length) {
+      return _data[id];
+    }
+    return null;
+  }
+
+  List<T> getAll() {
+    return _data;
+  }
+}
+
+// Fungsi Generic swap<T>
+void swap<T>(List<T> list, int i, int j) {
+  T temp = list[i];
+  list[i] = list[j];
+  list[j] = temp;
+}
+
+// Triple<A, B, C>
+class Triple<A, B, C> {
+  A first;
+  B second;
+  C third;
+
+  Triple(this.first, this.second, this.third);
+
+  @override
+  String toString() {
+    return '($first, $second, $third)';
+  }
+}
+
+void main() {
+  // Repository
+  var repo = Repository<String>();
+
+  repo.save("Andi");
+  repo.save("Budi");
+  repo.save("Citra");
+
+  print("Data ID 1: ${repo.getById(1)}");
+  print("Semua Data: ${repo.getAll()}");
+
+  // Swap
+  List<String> nama = ["A", "B", "C"];
+
+  swap(nama, 0, 2);
+  print("Setelah swap: $nama");
+
+  // Triple
+  var data = Triple<String, int, double>(
+    "Andi",
+    20,
+    85.5,
+  );
+
+  print("Triple: $data");
+}
+</pre>
+
+<button class="btn" onclick="openDartpad('https://dartpad.dev/742e594cea0f62da9ce99248e30d6f0e')">Jalankan di DartPad</button>
+  
 </div>
 
 </section>
 
 <section id="latihan">
 
-<h2>Latihan:</h2>
+<h2>Generic vs Dynamic vs Object:</h2>
 
 <div class="card">
 
-<ul>
-<li>1. Buat abstract/interface class bekerja() Pekerja dengan method abstract/non abstract</li>
-<li>2. Buat 3 class yang mengimplementasi: Programmer , Dokter , Guru</li>
-<li>3. Buat list List<Pekerja> dan demonstrasikan polimorfisme</li>
-<li>4. buat class "Tablet" (Mewarisi komputer,Kamera dan Telepon)</li>
-<li>5. Buat class MathUtils dengan static methods untuk factorial, cek bilangan prima, Membulatkan double ke desimal tertentu, Menghasilkan bilangan acak 
-    integer dan double dalam range [min, max], Menghitung rata-rata dari list angka, dan Menghitung median dari list angka</li>
-</ul>
+ <table>
+        <tr>
+            <th>Aspect</th>
+            <th>Generic&lt;T&gt;</th>
+            <th>dynamic</th>
+            <th>Object</th>
+        </tr>
+
+        <tr>
+            <td><b>Type Safety</b></td>
+            <td class="good">✔ Compile-time</td>
+            <td class="bad">✘ Runtime</td>
+            <td class="warn">⚠ Compile-time</td>
+        </tr>
+
+        <tr>
+            <td><b>Flexibility</b></td>
+            <td>Terbatas (sesuai T)</td>
+            <td>Sangat fleksibel</td>
+            <td>Terbatas</td>
+        </tr>
+
+        <tr>
+            <td><b>Performance</b></td>
+            <td class="good">✔ Optimal</td>
+            <td class="bad">✘ Overhead</td>
+            <td class="good">✔ Optimal</td>
+        </tr>
+
+        <tr>
+            <td><b>Casting</b></td>
+            <td>Tidak perlu</td>
+            <td>Tidak perlu</td>
+            <td>Perlu casting</td>
+        </tr>
+    </table>
 
 <pre>
-1. CLASS PEKERJA (bonus 1)
-  
-abstract class Pekerja {
-  String nama;
-
-  Pekerja(this.nama);
-
-  void bekerja();
-
-  void info() {
-    print("Nama: $nama");
-  }
-}
-
-class Programmer extends Pekerja {
-  Programmer(String nama) : super(nama);
-
-  @override
-  void bekerja() {
-    print("$nama bekerja sebagai Programmer");
-  }
-}
-
-
-void main() {
-  Programmer p = Programmer("Bagas");
-  p.info();
-  p.bekerja();
-}
+Box&lt;int&gt; box1 = Box&lt;int&gt;(42); // Generic: aman
+dynamic box2 = 42;            // Dynamic: tidak aman
+Object box3 = 42;             // Object: perlu casting
 </pre>
-<button class="btn" onclick="openDartpad('https://dartpad.dev/09b2f9ff3576eba72d71bdae18294abd')">Jalankan di DartPad</button>
 
-<pre>
-2. Implementasi Class Programmer, Dokter, Guru (bonus 2)
-  
-abstract class Pekerja {
-  void bekerja();
-}
-
-class Programmer implements Pekerja {
-  @override
-  void bekerja() {
-    print("Programmer coding");
-  }
-}
-
-class Dokter implements Pekerja {
-  @override
-  void bekerja() {
-    print("Dokter memeriksa pasien");
-  }
-}
-
-class Guru implements Pekerja {
-  @override
-  void bekerja() {
-    print("Guru mengajar");
-  }
-}
-
-void main() {
-  Programmer().bekerja();
-  Dokter().bekerja();
-  Guru().bekerja();
-}
-</pre>
-<button class="btn" onclick="openDartpad('https://dartpad.dev/63382e89cde3b90ae3937cf6aa75a1cb')">Jalankan di DartPad</button>
-
-<pre>
-3. Polimorfisme dengan List (bonus 3)
-  
-abstract class Pekerja {
-  String nama;
-  Pekerja(this.nama);
-
-  void bekerja();
-}
-
-class Programmer extends Pekerja {
-  Programmer(String nama) : super(nama);
-
-  @override
-  void bekerja() {
-    print("$nama sedang coding");
-  }
-}
-
-class Dokter extends Pekerja {
-  Dokter(String nama) : super(nama);
-
-  @override
-  void bekerja() {
-    print("$nama sedang mengobati pasien");
-  }
-}
-
-class Guru extends Pekerja {
-  Guru(String nama) : super(nama);
-
-  @override
-  void bekerja() {
-    print("$nama sedang mengajar");
-  }
-}
-
-void identitas() {
-  
-}
-  
-void main() {
-  print("=== Polimorfisme List ===");
-  identitas();
-
-  List<Pekerja> daftar = [
-    Programmer("Bagas"),
-    Dokter("Adit"),
-    Guru("Anjong"),
-  ];
-
-  for (var p in daftar) {
-    p.bekerja();
-  }
-}
-</pre>
-<button class="btn" onclick="openDartpad('https://dartpad.dev/9d92996ba8fd5769eb7699fa18c49f93')">Jalankan di DartPad</button>
-
-<pre>
-4. Class Tablet (Multiple Implements) (bonus 4)
-  
-abstract class Komputer {
-  void menjalankanProgram();
-}
-
-abstract class Kamera {
-  void ambilFoto();
-}
-
-abstract class Telepon {
-  void menelepon();
-}
-
-class Tablet implements Komputer, Kamera, Telepon {
-  @override
-  void menjalankanProgram() {
-    print("Tablet menjalankan program");
-  }
-
-  @override
-  void ambilFoto() {
-    print("Tablet mengambil foto");
-  }
-
-  @override
-  void menelepon() {
-    print("Tablet menelepon");
-  }
-}
-
-void identitas() {
-}
-
-void main() {
-  print("=== Multiple Interface ===");
-  identitas();
-
-  Tablet tablet = Tablet();
-  tablet.menjalankanProgram();
-  tablet.ambilFoto();
-  tablet.menelepon();
-}
-</pre>
-<button class="btn" onclick="openDartpad('https://dartpad.dev/c5544ff07e8a00d6c9767fce219a17d6')">Jalankan di DartPad</button>
-
-<pre>
-5. MathUtils (Static Methods ) (bonus 5)
-
-import 'dart:math';
- 
-class MathUtils {
-
-  static int faktorial(int n) {
-    if(n <= 1) return 1;
-    return n * faktorial(n-1);
-  }
-
-  static bool cekPrima(int n) {
-    if(n <= 1) return false;
-    for(int i = 2; i <= sqrt(n); i++) {
-      if(n % i == 0) return false;
-    }
-    return true;
-  }
-
-  static double pembulatan(double angka, int desimal) {
-    double scale = pow(10, desimal).toDouble();
-    return (angka * scale).round() / scale;
-  }
-
-  static int randomInt(int min, int max) {
-    return 3; // supaya sama dengan hasil output
-  }
-
-  static double rataRata(List<int> list) {
-    int total = list.reduce((a, b) => a + b);
-    return total / list.length;
-  }
-
-  static double median(List<int> list) {
-    List<int> sorted = List.from(list)..sort();
-    int n = sorted.length;
-
-    if(n % 2 == 0) {
-      return (sorted[n ~/ 2 - 1] + sorted[n ~/ 2]) / 2;
-    } else {
-      return sorted[n ~/ 2].toDouble();
-    }
-  }
-}
-
-void main() {
-  print("=== Utility Math ===");
-
-  print("Faktorial 5 = ${MathUtils.faktorial(5)}");
-  print("Prima 7 = ${MathUtils.cekPrima(7)}");
-  print("Pembulatan = ${MathUtils.pembulatan(3.14159, 2)}");
-  print("Contoh angka = ${MathUtils.randomInt(1, 10)}");
-  print("Rata-rata = ${MathUtils.rataRata([10, 20, 30, 40, 50])}");
-  print("Median = ${MathUtils.median([10, 20, 30, 40, 50])}");
-}
-</pre>      
-<button class="btn" onclick="openDartpad('https://dartpad.dev/7201f4a0dd5120ec95f76f9c55bb72c4')">Jalankan di DartPad</button>
+<button class="btn" onclick="openDartpad('https://dartpad.dev/742e594cea0f62da9ce99248e30d6f0e')">Jalankan di DartPad</button>
   
 </div>
 
@@ -987,79 +834,55 @@ void main() {
 
 <section id="challenge">
 
-<h2>Challenge:</h2>
+<h2>Studi Kasus – Cache Generic</h2>
 
 <div class="card">
-Buat sistem dengan:
-<ul>
-<li>Abstract class: MediaPlayer </li>
-<li>Interface: Playable , Pausable</li>
-<li>Class implementasi: AudioPlayer , VideoPlayer</li>
-</ul>
 
 <pre id="code10">
-// Abstract class
-abstract class MediaPlayer {
-  void play();
-  void stop();
-}
+class Cache<T> {
+  final Map<String, T> _storage = {};
 
-// Interface Playable
-abstract class Playable {
-  void play();
-}
-
-// Interface Pausable
-abstract class Pausable {
-  void pause();
-}
-
-// Class AudioPlayer
-class AudioPlayer extends MediaPlayer implements Playable, Pausable {
-  @override
-  void play() {
-    print("Audio diputar");
+  void set(String key, T value) {
+    _storage[key] = value;
   }
 
-  @override
-  void pause() {
-    print("Audio dijeda");
+  T? get(String key) {
+    return _storage[key];
   }
 
-  @override
-  void stop() {
-    print("Audio dihentikan");
+  void remove(String key) {
+    _storage.remove(key);
   }
 }
 
-// Class VideoPlayer
-class VideoPlayer extends MediaPlayer implements Playable, Pausable {
-  @override
-  void play() {
-    print("Video diputar");
-  }
+class Product {
+  String name;
+  double price;
+
+  Product(this.name, this.price);
 
   @override
-  void pause() {
-    print("Video dijeda");
-  }
-
-  @override
-  void stop() {
-    print("Video dihentikan");
+  String toString() {
+    return 'Product(name: $name, price: \$${price.toStringAsFixed(2)})';
   }
 }
 
-// Main
 void main() {
-  MediaPlayer audio = AudioPlayer();
-  MediaPlayer video = VideoPlayer();
+  // Cache untuk String
+  var userCache = Cache<String>();
+  userCache.set('name', 'Alice');
 
-  audio.play();
-  audio.stop();
+  print('User Name: ${userCache.get('name')}');
 
-  video.play();
-  video.stop();
+  // Cache untuk Product
+  var productCache = Cache<Product>();
+  productCache.set('p1', Product('Laptop', 1000));
+
+  print('Product: ${productCache.get('p1')}');
+
+  // Menghapus data
+  userCache.remove('name');
+  print('Setelah dihapus: ${userCache.get('name')}');
 }
 </pre>
 
@@ -1068,6 +891,168 @@ void main() {
 </div>
 
 </section>
+
+<section id="perbedaan">
+
+<h2>Ringkasan & Latihan</h2>
+  
+<div class="card">
+
+<h2>Ringkasan</h2>
+    <ul>
+        <li>Generic membuat kode lebih aman (type-safe) dan dapat digunakan kembali (reusable).</li>
+        <li>Generic dapat digunakan pada class, fungsi, dan collection.</li>
+        <li>Type inference memudahkan penggunaan generic tanpa menuliskan tipe secara eksplisit.</li>
+        <li>Constraints digunakan untuk membatasi tipe data yang diperbolehkan.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Latihan 1 - Class Stack&lt;T&gt;</h2>
+
+<pre><code>
+class Stack&lt;T&gt; {
+  final List&lt;T&gt; _items = [];
+
+  void push(T item) {
+    _items.add(item);
+  }
+
+  T? pop() {
+    if (_items.isEmpty) return null;
+    return _items.removeLast();
+  }
+
+  T? peek() {
+    if (_items.isEmpty) return null;
+    return _items.last;
+  }
+}
+</code></pre>
+
+<p><strong>Contoh Penggunaan:</strong></p>
+
+<pre><code>
+var stack = Stack&lt;int&gt;();
+
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+print(stack.peek()); // 30
+print(stack.pop());  // 30
+print(stack.peek()); // 20
+</code></pre>
+
+    <hr>
+
+    <h2>Latihan 2 - Fungsi mergeLists&lt;T&gt;</h2>
+
+<pre><code>
+List&lt;T&gt; mergeLists&lt;T&gt;(List&lt;T&gt; a, List&lt;T&gt; b) {
+  return [...a, ...b];
+}
+</code></pre>
+
+<p><strong>Contoh Penggunaan:</strong></p>
+
+<pre><code>
+var hasil = mergeLists&lt;int&gt;(
+  [1, 2, 3],
+  [4, 5, 6]
+);
+
+print(hasil);
+
+// Output:
+// [1, 2, 3, 4, 5, 6]
+</code></pre>
+
+    <hr>
+
+    <h2>Latihan 3 - Class Response&lt;T&gt;</h2>
+
+<pre><code>
+class Response&lt;T&gt; {
+  T? data;
+  String? error;
+
+  Response({
+    this.data,
+    this.error,
+  });
+}
+</code></pre>
+
+<p><strong>Contoh Penggunaan:</strong></p>
+
+<pre><code>
+var response = Response&lt;String&gt;(
+  data: "Data berhasil dimuat"
+);
+
+print(response.data);
+
+// Output:
+// Data berhasil dimuat
+</code></pre>
+
+    <hr>
+
+    <h2>Challenge - Sistem Repository Generic</h2>
+
+<pre><code>
+class Repository&lt;T&gt; {
+  final List&lt;T&gt; _data = [];
+
+  void add(T item) {
+    _data.add(item);
+  }
+
+  List&lt;T&gt; getAll() {
+    return _data;
+  }
+
+  T? getByIndex(int index) {
+    if (index >= 0 && index < _data.length) {
+      return _data[index];
+    }
+    return null;
+  }
+
+  void remove(T item) {
+    _data.remove(item);
+  }
+}
+</code></pre>
+
+<p><strong>Contoh Penggunaan:</strong></p>
+
+<pre><code>
+var userRepository = Repository&lt;String&gt;();
+
+userRepository.add("Alice");
+userRepository.add("Bob");
+userRepository.add("Charlie");
+
+print(userRepository.getAll());
+
+print(userRepository.getByIndex(1));
+
+userRepository.remove("Bob");
+
+print(userRepository.getAll());
+
+// Output:
+// [Alice, Bob, Charlie]
+// Bob
+// [Alice, Charlie]
+</code></pre>
+  
+</div>
+
+</section>
+    
 
 </div>
 
