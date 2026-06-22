@@ -922,8 +922,8 @@ void main() {
     <h2>Latihan 1 - Class Stack&lt;T&gt;</h2>
 
 <pre><code>
-class Stack&lt;T&gt; {
-  final List&lt;T&gt; _items = [];
+class Stack<T> {
+  final List<T> _items = [];
 
   void push(T item) {
     _items.add(item);
@@ -944,47 +944,50 @@ class Stack&lt;T&gt; {
 <p><strong>Contoh Penggunaan:</strong></p>
 
 <pre><code>
-var stack = Stack&lt;int&gt;();
+void main() {
+  var stack = Stack<int>();
 
-stack.push(10);
-stack.push(20);
-stack.push(30);
+  stack.push(10);
+  stack.push(20);
+  stack.push(30);
 
-print(stack.peek()); // 30
-print(stack.pop());  // 30
-print(stack.peek()); // 20
+  print(stack.peek()); // 30
+  print(stack.pop());  // 30
+  print(stack.peek()); // 20
+}
 </code></pre>
-
+<img src="Cuplikan layar 2026-06-22 150527.png" class="gambar-box">
     <hr>
 
     <h2>Latihan 2 - Fungsi mergeLists&lt;T&gt;</h2>
 
 <pre><code>
-List&lt;T&gt; mergeLists&lt;T&gt;(List&lt;T&gt; a, List&lt;T&gt; b) {
-  return [...a, ...b];
+List<T> mergeLists<T>(List<T> list1, List<T> list2) {
+  return [...list1, ...list2];
 }
 </code></pre>
 
 <p><strong>Contoh Penggunaan:</strong></p>
 
 <pre><code>
-var hasil = mergeLists&lt;int&gt;(
-  [1, 2, 3],
-  [4, 5, 6]
-);
+void main() {
+  var hasil = mergeLists<int>(
+    [1, 2, 3],
+    [4, 5, 6],
+  );
 
-print(hasil);
-
+  print(hasil);
+}
 // Output:
 // [1, 2, 3, 4, 5, 6]
 </code></pre>
-
+<img src="Cuplikan layar 2026-06-22 152040.png" class="gambar-box">
     <hr>
 
     <h2>Latihan 3 - Class Response&lt;T&gt;</h2>
 
 <pre><code>
-class Response&lt;T&gt; {
+class Response<T> {
   T? data;
   String? error;
 
@@ -993,34 +996,36 @@ class Response&lt;T&gt; {
     this.error,
   });
 }
+
 </code></pre>
 
 <p><strong>Contoh Penggunaan:</strong></p>
 
 <pre><code>
-var response = Response&lt;String&gt;(
-  data: "Data berhasil dimuat"
-);
+void main() {
+  var response = Response<String>(
+    data: "Data berhasil dimuat",
+  );
 
-print(response.data);
-
+  print(response.data);
+}
 // Output:
 // Data berhasil dimuat
 </code></pre>
-
+<img src="Cuplikan layar 2026-06-22 152454.png" class="gambar-box">
     <hr>
 
     <h2>Challenge - Sistem Repository Generic</h2>
 
 <pre><code>
-class Repository&lt;T&gt; {
-  final List&lt;T&gt; _data = [];
+class Repository<T> {
+  final List<T> _data = [];
 
   void add(T item) {
     _data.add(item);
   }
 
-  List&lt;T&gt; getAll() {
+  List<T> getAll() {
     return _data;
   }
 
@@ -1040,26 +1045,27 @@ class Repository&lt;T&gt; {
 <p><strong>Contoh Penggunaan:</strong></p>
 
 <pre><code>
-var userRepository = Repository&lt;String&gt;();
+void main() {
+  var userRepository = Repository<String>();
 
-userRepository.add("Alice");
-userRepository.add("Bob");
-userRepository.add("Charlie");
+  userRepository.add("Alice");
+  userRepository.add("Bob");
+  userRepository.add("Charlie");
 
-print(userRepository.getAll());
+  print(userRepository.getAll());
 
-print(userRepository.getByIndex(1));
+  print(userRepository.getByIndex(1));
 
-userRepository.remove("Bob");
+  userRepository.remove("Bob");
 
-print(userRepository.getAll());
-
+  print(userRepository.getAll());
+}
 // Output:
 // [Alice, Bob, Charlie]
 // Bob
 // [Alice, Charlie]
 </code></pre>
-  
+<img src="Cuplikan layar 2026-06-22 153046.png" class="gambar-box">
 </div>
 
 </section>
